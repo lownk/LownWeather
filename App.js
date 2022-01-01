@@ -2,13 +2,21 @@ import React from "react";
 import { useState, useEffect } from "react";
 import * as Location from "expo-location";
 import { StatusBar } from "expo-status-bar";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-// console.log(SCREEN_WIDTH);
+const API_KEY = "7ef5f8f95beb0d111452170d8652108b";
 
 export default function App() {
-  const [location, setLocation] = useState();
+  const [city, setCity] = useState("Loading...");
+  const [days, setDays] = useState([]);
   const [ok, setOk] = useState(true);
   const ask = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -24,7 +32,12 @@ export default function App() {
       { useGoogleMaps: false }
     );
 
-    console.log(location[0].city);
+    setCity(location[0].city);
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=alerts&appid=${API_KEY}`
+    );
+    const json = await response.json();
+    setDays(json.daily);
   };
 
   useEffect(() => {
@@ -34,7 +47,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <View style={styles.city}>
-        <Text style={styles.cityName}>Seoul</Text>
+        <Text style={styles.cityName}>{city}</Text>
       </View>
 
       <ScrollView
@@ -43,20 +56,13 @@ export default function App() {
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.weather}
       >
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-
-        <View style={styles.day}>
-          <Text style={styles.temp}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
+        {days.length === 0 ? (
+          <View style={styles.day}>
+            <ActivityIndicator animating={true} color="white" size="large" />
+          </View>
+        ) : (
+          <View style={styles.day}></View>
+        )}
       </ScrollView>
 
       <StatusBar style="light" />
@@ -81,7 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   weather: {
-    backgroundColor: "#7b9db2",
+    // backgroundColor: "#7b9db2",
   },
   day: {
     width: SCREEN_WIDTH,
