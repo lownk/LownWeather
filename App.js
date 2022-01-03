@@ -85,9 +85,10 @@ export default function App() {
               >
                 <Text style={styles.temp}>
                   {parseFloat(day.temp.day).toFixed(1)}
+                  <Text style={{ fontSize: 30 }}>℃</Text>
                 </Text>
                 <Fontisto
-                  style={{ marginRight: 60 }}
+                  style={{ color: "#ccd7ff" }}
                   name={icons[day.weather[0].main]}
                   size={68}
                   color="white"
@@ -109,7 +110,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#116530",
+    backgroundColor: "#3D56B2",
   },
   city: {
     flex: 1.2,
@@ -117,19 +118,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cityName: {
-    // color: "#789aad",
-    color: "#E8E8CC",
-    fontSize: 55,
+    color: "white",
+    fontSize: 58,
     fontWeight: "500",
     marginTop: 100,
   },
-  weather: {
-    // backgroundColor: "#7b9db2",
-  },
   day: {
     width: SCREEN_WIDTH,
-    marginLeft: 25,
-    // alignItems: "center",
+    alignItems: "flex-start",
+    paddingHorizontal: 20,
   },
   temp: {
     color: "white",
@@ -145,7 +142,4 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 20,
   },
-  // icon: {
-  //   marginRight: "20",
-  // },
 });
